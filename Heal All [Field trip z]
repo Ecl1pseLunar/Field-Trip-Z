@@ -1,0 +1,58 @@
+ - - Heal All
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+
+-- Lista para armazenar jogadores
+local playerList = {}
+local isLoopActive = true  -- Variável para controlar o loop de cura
+
+-- Função para preencher a lista de jogadores (exceto o jogador local)
+local function updatePlayerList()
+    playerList = {}  -- Limpar lista de jogadores
+    for _, otherPlayer in ipairs(Players:GetPlayers()) do
+        if otherPlayer ~= player then
+            table.insert(playerList, otherPlayer.Name)
+        end
+    end
+end
+
+-- Função para curar os jogadores
+local function healPlayers()
+    -- Se o loop não estiver ativo, interrompe a função
+    if not isLoopActive then return end
+
+    -- Se a lista de jogadores estiver vazia, atualiza a lista novamente
+    if #playerList == 0 then
+        updatePlayerList()
+    end
+
+    -- Se houver jogadores para curar
+    if #playerList > 0 then
+        -- Pega o nome do próximo jogador
+        local currentPlayerName = playerList[1]
+        -- Remove o jogador da lista
+        table.remove(playerList, 1)
+
+        -- Usa o nome do jogador na função de cura
+        local args = {
+            [1] = "HEAL_PLAYER",
+            [2] = game:GetService("Players")[currentPlayerName],  -- Nome do jogador a ser curado
+            [3] = 99999  -- Quantidade de cura
+        }
+
+        -- Chama a função de cura
+        ReplicatedStorage.NetworkEvents.RemoteFunction:InvokeServer(unpack(args))
+
+        -- Aguarda 1 segundo entre as curas
+        wait(0.2)
+
+        -- Chama a função recursivamente para curar o próximo jogador
+        healPlayers()
+    end
+end
+
+-- Iniciar o processo de cura
+updatePlayerList()  -- Atualiza a lista de jogadores
+healPlayers()  -- Inicia o processo de cura
