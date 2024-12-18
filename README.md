@@ -69,7 +69,7 @@ end
 
  -- Abar Game:
  
-Tabs.Main:AddParagraph({ Title = "Game", Content = "Use exploiter para alterar o jogo: obtenha itens, torne-se imortal, cure aliados e explore outras funções." })
+Tabs.Game:AddParagraph({ Title = "Game", Content = "Use exploiter para alterar o jogo: obtenha itens, torne-se imortal, cure aliados e explore outras funções." })
 
 -- Botão Supplies
 local suppliesToggle = Tabs.Game:AddToggle("Supplies", {Title = "Supplies", Default = false })
@@ -148,11 +148,30 @@ Input:OnChanged(function(valorDigitado)
     end
 end)
 
+Tabs.Game:AddButton({
+    Title = "Infinite Stock", 
+    Callback = function()
+        -- Função para verificar e alterar o valor do InValue
+        local function checkAndChangeStackValue(player)
+            -- Itera sobre as ferramentas no inventário do jogador
+            for _, tool in pairs(player.Backpack:GetChildren()) do
+                -- Verifica se a ferramenta tem um InValue chamado "Stack"
+                local stackValue = tool:FindFirstChild("Stack")
+                if stackValue then
+                    -- Se o InValue "Stack" for encontrado, altera seu valor para 99999999999999999
+                    stackValue.Value = 99999999999999999
+                end
+            end
+        end
 
+        -- Chama a função com o jogador atual
+        checkAndChangeStackValue(game.Players.LocalPlayer)
+    end
+})
 
  -- Abar do teleport
 
-Tabs.Main:AddParagraph({ Title = "Teleport", Content = "Permite teletransportar-se para locais específicos do jogo com facilidade e rapidez." })
+Tabs.Teleport:AddParagraph({ Title = "Teleport", Content = "Permite teletransportar-se para locais específicos do jogo com facilidade e rapidez." })
 
 -- Botões de Teleport
 Tabs.Teleport:AddButton({
@@ -229,7 +248,7 @@ Tabs.Teleport:AddButton({
 
  -- Abar Script HubHub
  
-Tabs.Main:AddParagraph({ Title = "Script Hub", Content = "Central para scripts, com funções de exploiter e customizações para modificar o jogo de diversas maneiras." })
+Tabs.ScriptHub:AddParagraph({ Title = "Script Hub", Content = "Central para scripts, com funções de exploiter e customizações para modificar o jogo de diversas maneiras." })
  
 Tabs.ScriptHub:AddButton({ Title = "Dex Mobile", Callback = function() 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/realredz/DEX-Explorer/refs/heads/main/Mobile.lua"))()
