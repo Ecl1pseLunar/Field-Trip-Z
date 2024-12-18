@@ -69,7 +69,7 @@ end
 
  -- Abar Game:
  
-Tabs.Game:AddParagraph({ Title = "Game", Content = "Use exploiter para alterar o jogo: obtenha itens, torne-se imortal, cure aliados e explore outras funções." })
+Tabs.Main:AddParagraph({ Title = "Game", Content = "Use exploiter para alterar o jogo: obtenha itens, torne-se imortal, cure aliados e explore outras funções." })
 
 -- Botão Supplies
 local suppliesToggle = Tabs.Game:AddToggle("Supplies", {Title = "Supplies", Default = false })
@@ -110,23 +110,23 @@ end
 
 Tabs.Game:AddParagraph({ Title = "Tool", Content = "Digite o nome do item que deseja!" })
 
--- Integração com o sistema de input
-local Input = Tabs.Game:AddInput("Input", {
-    Title = "Insira o nome do item",
-    Default = "NameTool", -- Valor inicial.
-    Placeholder = "Digite o nome do item...", -- Dica para o usuário.
-    Numeric = false -- Define se apenas números são permitidos.
-})
-
 -- Função para buscar o item pelo nome dentro de uma pasta (recursivo)
 local function buscarItem(pasta, nome)
     for _, objeto in ipairs(pasta:GetDescendants()) do
-        if objeto.Name == nome then
+        if objeto.Name == nome and objeto:IsA("Tool") then -- Verifica se é uma ferramenta
             return objeto
         end
     end
     return nil -- Retorna nil se não encontrar o item
 end
+
+-- Integração com o sistema de input
+local Input = Tabs.Game:AddInput("Input", {
+    Title = "Insira o nome do item",
+    Default = "", -- Valor inicial.
+    Placeholder = "Digite o nome do item...", -- Dica para o usuário.
+    Numeric = false -- Define se apenas números são permitidos.
+})
 
 -- Evento para capturar o valor digitado no input
 Input:OnChanged(function(valorDigitado)
@@ -149,9 +149,10 @@ Input:OnChanged(function(valorDigitado)
 end)
 
 
+
  -- Abar do teleport
 
-Tabs.Teleport:AddParagraph({ Title = "Teleport", Content = "Permite teletransportar-se para locais específicos do jogo com facilidade e rapidez." })
+Tabs.Main:AddParagraph({ Title = "Teleport", Content = "Permite teletransportar-se para locais específicos do jogo com facilidade e rapidez." })
 
 -- Botões de Teleport
 Tabs.Teleport:AddButton({
@@ -228,7 +229,7 @@ Tabs.Teleport:AddButton({
 
  -- Abar Script HubHub
  
-Tabs.ScriptHub:AddParagraph({ Title = "Script Hub", Content = "Central para scripts, com funções de exploiter e customizações para modificar o jogo de diversas maneiras." })
+Tabs.Main:AddParagraph({ Title = "Script Hub", Content = "Central para scripts, com funções de exploiter e customizações para modificar o jogo de diversas maneiras." })
  
 Tabs.ScriptHub:AddButton({ Title = "Dex Mobile", Callback = function() 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/realredz/DEX-Explorer/refs/heads/main/Mobile.lua"))()
