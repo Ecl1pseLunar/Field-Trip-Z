@@ -14,8 +14,10 @@ local Window = Fluent:CreateWindow({
 
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
-    Humanoid = Window:AddTab({ Title = "Humanoid", Icon = "" }),
+    Game = Window:AddTab({ Title = "Game", Icon = "" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "" }),
+    ControlPainel = Window:AddTab({ Title = "Control Painel", Icon = "" }),
+    ScriptHub = Window:AddTab({ Title = "Script Hub", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
@@ -65,8 +67,12 @@ local function toggleHealAll(state)
     end
 end
 
+ -- Abar Game:
+ 
+Tabs.Game:AddParagraph({ Title = "Game", Content = "Use exploiter para alterar o jogo: obtenha itens, torne-se imortal, cure aliados e explore outras funções." })
+
 -- Botão Supplies
-local suppliesToggle = Tabs.Humanoid:AddToggle("Supplies", {Title = "Supplies", Default = false })
+local suppliesToggle = Tabs.Game:AddToggle("Supplies", {Title = "Supplies", Default = false })
 suppliesToggle:OnChanged(function(state)
     humanoidToggleState = state
     while humanoidToggleState do
@@ -81,7 +87,7 @@ suppliesToggle:OnChanged(function(state)
 end)
 
 -- Botão God Mode
-local godToggle = Tabs.Humanoid:AddToggle("God", {Title = "God Mode", Default = false })
+local godToggle = Tabs.Game:AddToggle("God", {Title = "God Mode", Default = false })
 godToggle:OnChanged(function(state)
     godToggleState = state
     while godToggleState do
@@ -92,7 +98,7 @@ godToggle:OnChanged(function(state)
 end)
 
 -- Botão Heal All
-local healAllToggle = Tabs.Humanoid:AddToggle("HealAll", {Title = "Heal All", Default = false })
+local healAllToggle = Tabs.Game:AddToggle("HealAll", {Title = "Heal All", Default = false })
 healAllToggle:OnChanged(function(state)
     toggleHealAll(state)
 end)
@@ -101,6 +107,51 @@ end)
 local function teleportToPosition(x, y, z)
     game:GetService("Players").LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(x, y, z))
 end
+
+Tabs.Game:AddParagraph({ Title = "Tool", Content = "Digite o nome do item que deseja!" })
+
+-- Integração com o sistema de input
+local Input = Tabs.Game:AddInput("Input", {
+    Title = "Insira o nome do item",
+    Default = "NameTool", -- Valor inicial.
+    Placeholder = "Digite o nome do item...", -- Dica para o usuário.
+    Numeric = false -- Define se apenas números são permitidos.
+})
+
+-- Função para buscar o item pelo nome dentro de uma pasta (recursivo)
+local function buscarItem(pasta, nome)
+    for _, objeto in ipairs(pasta:GetDescendants()) do
+        if objeto.Name == nome then
+            return objeto
+        end
+    end
+    return nil -- Retorna nil se não encontrar o item
+end
+
+-- Evento para capturar o valor digitado no input
+Input:OnChanged(function(valorDigitado)
+    print("Você digitou:", valorDigitado)
+    
+    local localizacao = game:GetService("ReplicatedStorage") -- Local onde os itens estão (altere se necessário)
+    
+    -- Busca o item
+    local itemEncontrado = buscarItem(localizacao, valorDigitado)
+    
+    if itemEncontrado then
+        -- Clona o item encontrado
+        local itemClonado = itemEncontrado:Clone()
+        -- Move o item clonado para o inventário do jogador
+        itemClonado.Parent = game.Players.LocalPlayer.Backpack
+        print("Item '" .. valorDigitado .. "' clonado e movido para o inventário!")
+    else
+        print("Item '" .. valorDigitado .. "' não encontrado! Verifique o nome e o local.")
+    end
+end)
+
+
+ -- Abar do teleport
+
+Tabs.Teleport:AddParagraph({ Title = "Teleport", Content = "Permite teletransportar-se para locais específicos do jogo com facilidade e rapidez." })
 
 -- Botões de Teleport
 Tabs.Teleport:AddButton({
@@ -175,14 +226,34 @@ Tabs.Teleport:AddButton({
     end
 })
 
--- Menu de Configurações (Settings)
-Tabs.Settings:AddButton({
-    Title = "Test Button",
-    Description = "Test Button in Settings",
-    Callback = function()
-        print("Settings Button Pressed")
-    end
-})
+ -- Abar Script HubHub
+ 
+Tabs.ScriptHub:AddParagraph({ Title = "Script Hub", Content = "Central para scripts, com funções de exploiter e customizações para modificar o jogo de diversas maneiras." })
+ 
+Tabs.ScriptHub:AddButton({ Title = "Dex Mobile", Callback = function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/realredz/DEX-Explorer/refs/heads/main/Mobile.lua"))()
+end })
+ 
+Tabs.ScriptHub:AddButton({ Title = "Fullbright", Callback = function() 
+ -- Start
+-- Script para remover o fog e desativar as sombras
+local lighting = game:GetService("Lighting")
+
+-- Remover o fog (névoa) de maneira definitiva
+lighting.FogStart = 1000000  -- Início do fog extremamente distante
+lighting.FogEnd = 10000000  -- Fim do fog mais distante ainda
+lighting.FogColor = Color3.fromRGB(255, 255, 255)  -- Cor do fog configurada para branco, praticamente invisível
+
+-- Desativar sombras
+lighting.GlobalShadows = false  -- Desativa as sombras globais, removendo todas as sombras do jogo
+
+-- Iluminação fullbright (sem sombras e com iluminação intensa)
+lighting.Ambient = Color3.fromRGB(255, 255, 255)  -- Cor do ambiente totalmente iluminada
+lighting.Brightness = 2  -- Brilho ajustado para garantir iluminação, mas sem exagero
+lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)  -- Luz externa clara, sem sombras
+lighting.TimeOfDay = "14:00:00"  -- Definindo uma hora do dia que ilumina intensamente (tarde)
+ -- End
+end })
 
 -- Salvando Configurações
 SaveManager:SetLibrary(Fluent)
