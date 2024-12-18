@@ -301,6 +301,12 @@ Tabs.ScriptHub:AddButton({
     end
 })
 
+Tabs.Main:AddButton({ Title = "Button", Callback = function() 
+
+    print("Botão pressionado!") 
+end })
+
+
 -- Salvando Configurações
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
@@ -322,3 +328,5 @@ Fluent:Notify({
 
 -- Carrega as configurações autoload
 SaveManager:LoadAutoloadConfig()
+
+ -- https://pt.anotepad.com/notes/xjpsgmyb
