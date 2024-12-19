@@ -21,6 +21,8 @@ local Tabs = {
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
+local FieldTripZ= 4954096313
+
 local Options = Fluent.Options
 
 local humanoidToggleState = false
@@ -71,6 +73,8 @@ end
  
 Tabs.Game:AddParagraph({ Title = "Game", Content = "Use exploiter para alterar o jogo: obtenha itens, torne-se imortal, cure aliados e explore outras funções." })
 
+for _, id in ipairs(FieldTripZ) do
+    if placeId == id then
 -- Botão Supplies
 local suppliesToggle = Tabs.Game:AddToggle("Supplies", {Title = "Supplies", Default = false })
 suppliesToggle:OnChanged(function(state)
@@ -168,6 +172,8 @@ Tabs.Game:AddButton({
         checkAndChangeStackValue(game.Players.LocalPlayer)
     end
 })
+    end
+end
 
  -- Abar do teleport
 
@@ -265,6 +271,160 @@ end })
 Tabs.ScriptHub:AddButton({ Title = "Infinite Jump", Callback = function() 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/HeyGyt/infjump/main/main"))()
 end })
+
+-- GUI do Hub
+local Dropdown = Tabs.ControlPainel:AddDropdown("Dropdown", {
+    Title = "Selecione um Pacote de Animação",
+    Values = {
+        "Padrão", "Cartunesco", "Cavaleiro", "Ninja", "Pirata",
+        "Astronauta", "Super-Herói", "Zumbi", "Levitação", 
+        "Vampiro", "Velocista", "Robô"
+    },
+    Multi = false, -- Usuário pode selecionar apenas um
+    Default = 1 -- "Padrão" é a opção inicial
+})
+
+-- Mapeamento dos IDs de animação para cada pacote
+local AnimationPackages = {
+    ["Padrão"] = {
+        Idle = "180435571",
+        Walk = "180426354",
+        Run = "180426354",
+        Jump = "125750702",
+        Fall = "180436148",
+        Climb = "180436334",
+        Swim = "180426354"
+    },
+    ["Cartunesco"] = {
+        Idle = "742637544",
+        Walk = "742640026",
+        Run = "742638842",
+        Jump = "742637942",
+        Fall = "742637151",
+        Climb = "742636889",
+        Swim = "742639220"
+    },
+    ["Cavaleiro"] = {
+        Idle = "657595757",
+        Walk = "657603513",
+        Run = "657604000",
+        Jump = "658409194",
+        Fall = "657600338",
+        Climb = "658360781",
+        Swim = "657609646"
+    },
+    ["Ninja"] = {
+        Idle = "656117400",
+        Walk = "656118852",
+        Run = "656118852",
+        Jump = "656117878",
+        Fall = "656118336",
+        Climb = "656114359",
+        Swim = "656119721"
+    },
+    ["Pirata"] = {
+        Idle = "750781874",
+        Walk = "750785693",
+        Run = "750783738",
+        Jump = "750782770",
+        Fall = "750782535",
+        Climb = "750782230",
+        Swim = "750784579"
+    },
+    ["Astronauta"] = {
+        Idle = "891621366",
+        Walk = "891667138",
+        Run = "891636393",
+        Jump = "891627522",
+        Fall = "891617961",
+        Climb = "891609353",
+        Swim = "891663592"
+    },
+    ["Super-Herói"] = {
+        Idle = "616006778",
+        Walk = "616013216",
+        Run = "616013216",
+        Jump = "616008936",
+        Fall = "616005863",
+        Climb = "616003713",
+        Swim = "616012453"
+    },
+    ["Zumbi"] = {
+        Idle = "616158929",
+        Walk = "616168032",
+        Run = "616163682",
+        Jump = "616161997",
+        Fall = "616156119",
+        Climb = "616154091",
+        Swim = "616165109"
+    },
+    ["Levitação"] = {
+        Idle = "616006778",
+        Walk = "616013216",
+        Run = "616013216",
+        Jump = "616008936",
+        Fall = "616005863",
+        Climb = "616003713",
+        Swim = "616012453"
+    },
+    ["Vampiro"] = {
+        Idle = "1083445855",
+        Walk = "1083473930",
+        Run = "1083462077",
+        Jump = "1083455352",
+        Fall = "1083447008",
+        Climb = "1083439238",
+        Swim = "1083464683"
+    },
+    ["Velocista"] = {
+        Idle = "616136790",
+        Walk = "616143997",
+        Run = "616140816",
+        Jump = "616139451",
+        Fall = "616134815",
+        Climb = "616133594",
+        Swim = "616144386"
+    },
+    ["Robô"] = {
+        Idle = "616088211",
+        Walk = "616095330",
+        Run = "616091570",
+        Jump = "616090535",
+        Fall = "616089559",
+        Climb = "616086039",
+        Swim = "616092998"
+    }
+}
+
+-- Função para aplicar as animações selecionadas
+Dropdown:OnChanged(function(Selected)
+    local Package = AnimationPackages[Selected]
+    if not Package then
+        print("Pacote não encontrado!")
+        return
+    end
+
+    local Character = game.Players.LocalPlayer.Character
+    if not Character then
+        print("Personagem não encontrado!")
+        return
+    end
+
+    -- Atualiza as animações do personagem
+    local AnimateScript = Character:FindFirstChild("Animate")
+    if AnimateScript then
+        AnimateScript.idle.Animation1.AnimationId = "rbxassetid://" .. Package.Idle
+        AnimateScript.walk.WalkAnim.AnimationId = "rbxassetid://" .. Package.Walk
+        AnimateScript.run.RunAnim.AnimationId = "rbxassetid://" .. Package.Run
+        AnimateScript.jump.JumpAnim.AnimationId = "rbxassetid://" .. Package.Jump
+        AnimateScript.fall.FallAnim.AnimationId = "rbxassetid://" .. Package.Fall
+        AnimateScript.climb.ClimbAnim.AnimationId = "rbxassetid://" .. Package.Climb
+        AnimateScript.swim.Swim.AnimationId = "rbxassetid://" .. Package.Swim
+        print("Pacote de animação aplicado: " .. Selected)
+    else
+        print("Script 'Animate' não encontrado no personagem!")
+    end
+end)
 
 -- Salvando Configurações
 SaveManager:SetLibrary(Fluent)
