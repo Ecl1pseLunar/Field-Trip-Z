@@ -255,24 +255,15 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/realredz/DEX-Explorer
 end })
  
 Tabs.ScriptHub:AddButton({ Title = "Fullbright", Callback = function() 
- -- Start
--- Script para remover o fog e desativar as sombras
-local lighting = game:GetService("Lighting")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Ecl1pseLunar/Script-Hub-/refs/heads/main/Fullbright%20%5BScript-Hub%5D "))()
+end })
 
--- Remover o fog (névoa) de maneira definitiva
-lighting.FogStart = 1000000  -- Início do fog extremamente distante
-lighting.FogEnd = 10000000  -- Fim do fog mais distante ainda
-lighting.FogColor = Color3.fromRGB(255, 255, 255)  -- Cor do fog configurada para branco, praticamente invisível
+Tabs.ScriptHub:AddButton({ Title = "Esp", Callback = function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Ecl1pseLunar/Script-Hub-/refs/heads/main/Esp"))() 
+end })
 
--- Desativar sombras
-lighting.GlobalShadows = false  -- Desativa as sombras globais, removendo todas as sombras do jogo
-
--- Iluminação fullbright (sem sombras e com iluminação intensa)
-lighting.Ambient = Color3.fromRGB(255, 255, 255)  -- Cor do ambiente totalmente iluminada
-lighting.Brightness = 2  -- Brilho ajustado para garantir iluminação, mas sem exagero
-lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)  -- Luz externa clara, sem sombras
-lighting.TimeOfDay = "14:00:00"  -- Definindo uma hora do dia que ilumina intensamente (tarde)
- -- End
+Tabs.ScriptHub:AddButton({ Title = "Infinite Jump", Callback = function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/HeyGyt/infjump/main/main"))()
 end })
 
 -- Salvando Configurações
